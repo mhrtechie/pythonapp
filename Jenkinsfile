@@ -1,6 +1,7 @@
 node {
     def application = "pythonapp"
     def dockerhubaccountid = "mhrtechie"
+
     stage('Clone repository') {
         checkout scm
     }
@@ -10,10 +11,10 @@ node {
     }
 
     stage('Push image') {
-        withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-        app.push()
-        app.push("latest")
-    }
+        withDockerRegistry([ credentialsId: "dockerHub" ]) {
+            app.push()
+            app.push("latest")
+        }
     }
 
     stage('Deploy') {
@@ -21,7 +22,7 @@ node {
     }
 
     stage('Remove old images') {
-        // remove old docker images
+        // Remove old docker images (e.g., "latest" tag)
         sh("docker rmi ${dockerhubaccountid}/${application}:latest -f")
-   }
+    }
 }
